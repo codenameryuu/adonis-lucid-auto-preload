@@ -1,16 +1,16 @@
-import { ApplicationContract } from '@ioc:Adonis/Core/Application'
+import type { ApplicationService } from "@adonisjs/core/types";
 
 export default class AutoPreloadProvider {
-  public static needsApplication = true
+  public static needsApplication = true;
 
-  constructor(protected app: ApplicationContract) {}
+  constructor(protected app: ApplicationService) {}
 
   public register() {
-    this.app.container.singleton('Adonis/Addons/AutoPreload', () => {
-      const { AutoPreload } = require('../src/Mixins/AutoPreload')
+    this.app.container.singleton("Adonis/Addons/AutoPreload", () => {
+      const { AutoPreload } = require("../src/Mixins/AutoPreload");
 
-      return { AutoPreload }
-    })
+      return { AutoPreload };
+    });
   }
 
   public async boot() {}

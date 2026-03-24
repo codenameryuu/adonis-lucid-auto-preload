@@ -1,9 +1,9 @@
-declare module '@ioc:Adonis/Core/Application' {
-  import type { AutoPreloadMixin } from '@ioc:Adonis/Addons/AutoPreload'
+import type { AutoPreloadMixin } from "./auto-preload";
 
+declare module "@adonisjs/core/types" {
   export interface ContainerBindings {
-    'Adonis/Addons/AutoPreload': {
-      AutoPreload: AutoPreloadMixin
-    }
+    "Adonis/Addons/AutoPreload": {
+      AutoPreload: AutoPreloadMixin;
+    };
   }
 }

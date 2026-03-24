@@ -1,28 +1,16 @@
-declare module '@ioc:Adonis/Addons/AutoPreload' {
-  import type { LucidModel, ExtractModelRelations } from '@ioc:Adonis/Lucid/Orm'
-  import type { NormalizeConstructor } from '@ioc:Adonis/Core/Helpers'
+import type { NormalizeConstructor } from "@adonisjs/core/types/helpers";
+import type { LucidModel } from "@adonisjs/lucid/types/model";
 
-  type GetWith<T> = T extends { $with: any }
-    ? T['$with'][number] extends infer Item
-      ? Item extends string
-        ? Item
-        : never
-      : never
-    : never
+type GetWith<T> = T extends { $with: Array<infer Item> } ? (Item extends string ? Item : string) : string;
 
-  export interface AutoPreloadMixin {
-    <T extends NormalizeConstructor<LucidModel>>(superclass: T): T & {
-      $with: any
+export interface AutoPreloadMixin {
+  <T extends NormalizeConstructor<LucidModel>>(superclass: T): T & {
+    $with: Array<string | ((query: any) => void)>;
 
-      without<U extends LucidModel>(this: U, relationships: Array<GetWith<U>>): U
-      withOnly<U extends LucidModel>(this: U, relationships: Array<GetWith<U>>): U
-      withoutAny<U extends LucidModel>(this: U): U
+    without(this: T, relationships: Array<GetWith<T>>): T;
+    withOnly(this: T, relationships: Array<GetWith<T>>): T;
+    withoutAny(this: T): T;
 
-      new (...args: Array<any>): {}
-    }
-  }
-
-  const AutoPreload: AutoPreloadMixin
-
-  export { AutoPreload }
+    new (...args: Array<any>): {};
+  };
 }
