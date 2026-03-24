@@ -1,4 +1,4 @@
-# @codenameryuuu/adonis-lucid-auto-preload
+# @codenameryuu/adonis-lucid-auto-preload
 
 Auto-preload multiple relationships when retrieving Lucid models on Adonis JS 7.
 
@@ -9,13 +9,13 @@ Auto-preload multiple relationships when retrieving Lucid models on Adonis JS 7.
 ## Installation
 
 ```bash
-yarn add @codenameryuuu/adonis-lucid-auto-preload
+yarn add @codenameryuu/adonis-lucid-auto-preload
 ```
 
 ## Configure
 
 ```bash
-node ace configure @codenameryuuu/adonis-lucid-auto-preload
+node ace configure @codenameryuu/adonis-lucid-auto-preload
 ```
 
 ## Usage
@@ -34,7 +34,7 @@ Relationships will be auto-preloaded for `find` , `all` and `paginate` queries.
 import { BaseModel, column, hasMany, HasMany } from '@adonisjs/lucid/orm'
 import { compose } from '@adonisjs/core/helpers'
 
-import { AutoPreload } from '@codenameryuuu/adonis-lucid-auto-preload'
+import { AutoPreload } from '@codenameryuu/adonis-lucid-auto-preload'
 
 import Post from '#models/post'
 
@@ -75,7 +75,7 @@ import { BaseModel, column, hasMany, HasMany } from '@adonisjs/lucid/orm'
 import type { ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
 import { compose } from '@adonisjs/core/helpers'
 
-import { AutoPreload } from '@codenameryuuu/adonis-lucid-auto-preload'
+import { AutoPreload } from '@codenameryuu/adonis-lucid-auto-preload'
 
 import Post from '#models/post'
 
@@ -142,7 +142,7 @@ class Post extends BaseModel {
 import { BaseModel, column, hasMany, HasMany } from '@adonisjs/lucid/orm'
 import { compose } from '@adonisjs/core/helpers'
 
-import { AutoPreload } from '@codenameryuuu/adonis-lucid-auto-preload'
+import { AutoPreload } from '@codenameryuu/adonis-lucid-auto-preload'
 
 import Post from '#models/post'
 
@@ -186,7 +186,7 @@ We will use the following model for our methods examples.
 import { BaseModel, column, hasOne, HasOne, hasMany, HasMany } from '@adonisjs/lucid/orm'
 import { compose } from '@adonisjs/core/helpers'
 
-import { AutoPreload } from '@codenameryuuu/adonis-lucid-auto-preload'
+import { AutoPreload } from '@codenameryuu/adonis-lucid-auto-preload'
 
 import Profile from '#models/profile'
 import Post from '#models/post'
@@ -274,7 +274,7 @@ When using route model binding, you cannot use `without` , `withOnly` and `witho
 import { BaseModel, column, hasOne, HasOne, hasMany, HasMany } from '@adonisjs/lucid/orm'
 import { compose } from '@adonisjs/core/helpers'
 
-import { AutoPreload } from '@codenameryuuu/adonis-lucid-auto-preload'
+import { AutoPreload } from '@codenameryuu/adonis-lucid-auto-preload'
 
 import Profile from '#models/profile'
 import Post from '#models/post'
@@ -308,8 +308,8 @@ class User extends compose(BaseModel, AutoPreload) {
 
 ## Contributing
 
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/codenameryuuu/adonis-lucid-auto-preload/issues). You can also take a look at the [contributing guide](https://github.com/codenameryuuu/adonis-lucid-auto-preload/blob/master/CONTRIBUTING.md).
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/codenameryuu/adonis-lucid-auto-preload/issues). You can also take a look at the [contributing guide](https://github.com/codenameryuu/adonis-lucid-auto-preload/blob/master/CONTRIBUTING.md).
 
 ## License
 
-This project is [MIT](https://github.com/codenameryuuu/adonis-lucid-auto-preload/blob/master/LICENSE.md) licensed.
+This project is [MIT](https://github.com/codenameryuu/adonis-lucid-auto-preload/blob/master/LICENSE.md) licensed.

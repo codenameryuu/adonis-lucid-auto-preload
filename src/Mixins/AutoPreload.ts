@@ -45,7 +45,7 @@ export const AutoPreload: AutoPreloadMixin = (superclass) => {
         });
       }
 
-      this.before("paginate", ([_, query]: [ModelQueryBuilderContract<typeof this>, ModelQueryBuilderContract<typeof this>]) => {
+      this.before("paginate", ([_, query]: [ModelQueryBuilderContract<any>, ModelQueryBuilderContract<any>]) => {
         this.handleAutoPreload(query, false);
       });
     }
@@ -88,7 +88,7 @@ export const AutoPreload: AutoPreloadMixin = (superclass) => {
       return this;
     }
 
-    private static handleAutoPreload(query: ModelQueryBuilderContract<typeof this>, restorePreloads = true) {
+    private static handleAutoPreload(query: ModelQueryBuilderContract<any>, restorePreloads = true) {
       const preloads = this.$with;
 
       if (preloads.length > 0) {
@@ -113,7 +113,7 @@ export const AutoPreload: AutoPreloadMixin = (superclass) => {
     /**
      * Recursive function to handle nested relationships.
      */
-    private static handleNestedRelationships(query: ModelQueryBuilderContract<typeof this>, relationships: any) {
+    private static handleNestedRelationships(query: ModelQueryBuilderContract<any>, relationships: any) {
       if (relationships.length > 0) {
         const nextRelation = relationships.shift();
 

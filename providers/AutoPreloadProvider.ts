@@ -6,7 +6,7 @@ export default class AutoPreloadProvider {
   constructor(protected app: ApplicationService) {}
 
   public register() {
-    this.app.container.singleton("Adonis/Addons/AutoPreload", () => {
+    this.app.container.singleton("@codenameryuu/adonis-lucid-auto-preload", () => {
       const { AutoPreload } = require("../src/Mixins/AutoPreload");
 
       return { AutoPreload };
