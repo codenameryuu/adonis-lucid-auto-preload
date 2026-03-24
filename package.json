@@ -1,0 +1,137 @@
+{
+  "name": "@codenameryuuu/adonis-lucid-auto-preload",
+  "version": "1.0.0",
+  "description": "Auto-preload multiple relationships when retrieving Lucid models on Adonis JS 7",
+  "author": "codenameryuu",
+  "license": "MIT",
+  "homepage": "https://github.com/codenameryuu/adonis-lucid-auto-preload#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codenameryuu/adonis-lucid-auto-preload.git"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "keywords": [
+    "adonis",
+    "adonisjs",
+    "auto-preload"
+  ],
+  "scripts": {
+    "mrm": "mrm --preset=@adonisjs/mrm-preset",
+    "dev": "node ace serve --watch",
+    "build": "npm run compile",
+    "start": "node server.js",
+    "lint": "eslint . --ext=.ts",
+    "format": "prettier --write .",
+    "pretest": "npm run lint",
+    "test": "node -r @adonisjs/require-ts/build/register bin/test",
+    "clean": "del-cli build",
+    "copyfiles": "copyfiles \"templates/**/*.txt\" \"instructions.md\" build",
+    "compile": "npm run lint && npm run clean && tsc && npm run copyfiles",
+    "prepublishOnly": "npm run build",
+    "commit": "git-cz",
+    "release": "np --message=\"chore(release): %s\"",
+    "version": "npm run build",
+    "sync-labels": "github-label-sync --labels ./node_modules/@adonisjs/mrm-preset/gh-labels.json Melchyore/adonis-auto-preload"
+  },
+  "devDependencies": {
+    "@adonisjs/assembler": "^5.8.1",
+    "@adonisjs/lucid": "^18.1.0",
+    "@adonisjs/mrm-preset": "^5.0.3",
+    "@adonisjs/require-ts": "^2.0.12",
+    "@japa/expect": "^1.1.4",
+    "@japa/preset-adonis": "^1.1.0",
+    "@japa/runner": "^2.0.9",
+    "@poppinss/dev-utils": "^2.0.3",
+    "@types/node": "^18.7.13",
+    "adonis-preset-ts": "^2.1.0",
+    "commitizen": "^4.2.5",
+    "copyfiles": "^2.4.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "del-cli": "^5.0.0",
+    "eslint": "^8.23.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-adonis": "^2.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "github-label-sync": "^2.2.0",
+    "husky": "^8.0.1",
+    "mrm": "^4.1.0",
+    "np": "^7.6.2",
+    "pino-pretty": "^9.1.0",
+    "prettier": "^2.7.1",
+    "sqlite3": "^5.0.11",
+    "typescript": "~4.6",
+    "youch": "^3.2.0",
+    "youch-terminal": "^2.1.4"
+  },
+  "dependencies": {
+    "@adonisjs/core": "^5.8.6",
+    "reflect-metadata": "^0.1.13"
+  },
+  "peerDependencies": {
+    "@adonisjs/lucid": "^18.0.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:adonis/typescriptPackage",
+      "prettier"
+    ],
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "endOfLine": "auto"
+        }
+      ]
+    }
+  },
+  "eslintIgnore": [
+    "build"
+  ],
+  "prettier": "@adonisjs/prettier-config",
+  "publishConfig": {
+    "tag": "latest",
+    "access": "public"
+  },
+  "mrmConfig": {
+    "core": false,
+    "license": "MIT",
+    "services": [
+      "github-actions"
+    ],
+    "minNodeVersion": "16.13.1",
+    "probotApps": [
+      "stale",
+      "lock"
+    ],
+    "runGhActionsOnWindows": false
+  },
+  "main": "./build/providers/AutoPreloadProvider.js",
+  "types": "./build/adonis-typings/index.d.ts",
+  "files": [
+    "build/adonis-typings",
+    "build/providers",
+    "build/src",
+    "build/instructions.md"
+  ],
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "np": {
+    "contents": ".",
+    "anyBranch": false
+  },
+  "adonisjs": {
+    "instructionsMd": "./build/instructions.md",
+    "types": "@melchyore/adonis-auto-preload",
+    "providers": [
+      "@melchyore/adonis-auto-preload"
+    ]
+  }
+}
