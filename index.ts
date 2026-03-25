@@ -7,5 +7,5 @@
  * file that was distributed with this source code.
  */
 
-export { configure } from "./configure.js";
-export { AutoPreload } from "./src/mixins/auto_preload.ts";
+export { configure } from './configure.js'
+export { AutoPreload } from './src/mixins/auto_preload.ts'

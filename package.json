@@ -1,6 +1,6 @@
 {
   "name": "@codenameryuu/adonis-lucid-auto-preload",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Auto-preload multiple relationships when retrieving Lucid models on Adonis JS 7",
   "author": "codenameryuu",
   "license": "MIT",
@@ -25,18 +25,15 @@
     "./providers": "./build/providers/auto_preload_provider.js"
   },
   "scripts": {
-    "lint": "eslint .",
-    "format": "prettier --write .",
     "clean": "del-cli build",
-    "precompile": "npm run lint && npm run clean",
-    "compile": "tsup-node && tsc --emitDeclarationOnly --declaration",
-    "build": "npm run compile",
-    "pretest": "npm run lint",
-    "test": "c8 npm run quick:test",
     "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext=.ts",
+    "format": "prettier --write .",
+    "prebuild": "npm run lint && npm run clean",
+    "build": "npm run clean && tsc",
+    "release": "release-it",
     "version": "npm run build",
-    "prepublishOnly": "npm run build",
-    "release": "np"
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^7.7.0",
@@ -93,19 +90,5 @@
       "tests/**",
       "bin/**"
     ]
-  },
-  "tsup": {
-    "entry": [
-      "./index.ts",
-      "./src/exceptions/*.ts",
-      "./adonis-typings/*.ts",
-      "./providers/auto_preload_provider.ts"
-    ],
-    "outDir": "./build",
-    "clean": true,
-    "format": "esm",
-    "dts": false,
-    "sourcemap": true,
-    "target": "esnext"
   }
 }
