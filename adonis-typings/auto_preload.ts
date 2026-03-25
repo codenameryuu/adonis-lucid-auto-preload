@@ -11,11 +11,11 @@ export interface AutoPreloadMixin {
   <T extends NormalizeConstructor<LucidModel>>(
     superclass: T
   ): T & {
-    $with: Array<string | ((query: any) => void)>
+    $with: ReadonlyArray<string | ((query: any) => void)>
 
-    without(this: T, relationships: Array<GetWith<T>>): T
-    withOnly(this: T, relationships: Array<GetWith<T>>): T
-    withoutAny(this: T): T
+    without(this: T, relationships: Array<GetWith<T>>): any
+    withOnly(this: T, relationships: Array<GetWith<T>>): any
+    withoutAny(this: T): any
 
     new (...args: Array<any>): {}
   }

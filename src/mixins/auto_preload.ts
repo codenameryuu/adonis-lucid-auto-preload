@@ -1,151 +1,100 @@
 import type { NormalizeConstructor } from '@adonisjs/core/types/helpers'
 import type { LucidModel, ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
 
-import WrongRelationshipTypeException from '../exceptions/wrong_relationship_type_exception.js'
-import WrongArgumentTypeException from '../exceptions/wrong_argument_type_exception.js'
+type PreloadEntry = string | ((query: ModelQueryBuilderContract<any, any>) => void)
 
-type AutoPreloadMixin = <T extends NormalizeConstructor<LucidModel>>(
-  superclass: T
-) => T & {
-  $with: Array<string | ((query: any) => void)>
-  without(this: T, relationships: Array<string>): T
-  withOnly(this: T, relationships: Array<string>): T
-  withoutAny(this: T): T
-  new (...args: Array<any>): {}
-}
-
-export const AutoPreload: AutoPreloadMixin = (superclass) => {
+export function AutoPreload<T extends NormalizeConstructor<LucidModel>>(superclass: T) {
   class AutoPreloadModel extends superclass {
-    public static $with: Array<any> = []
-
-    protected static $originalWith: Array<any> = []
+    /**
+     * List of relationships to auto-preload.
+     */
+    public static $with: ReadonlyArray<PreloadEntry> = []
 
     public static boot() {
-      if (this.booted) {
-        return
-      }
-
-      if (this.$with.length > 0) {
-        const isWrongType = this.$with.every((relationship) => {
-          return !['function', 'string'].includes(typeof relationship)
-        })
-
-        if (isWrongType) {
-          throw WrongRelationshipTypeException.invoke(this.name)
-        }
-      }
-
       super.boot()
 
-      this.$originalWith = [...this.$with]
+      // `compose()` introduces an intermediate class. Depending on how Lucid
+      // handles boot flags, we might see `booted` as inherited and skip hook
+      // registration. Track it per subclass instead.
+      if ((this as any).$autoPreloadHooksRegistered) return
+      ;(this as any).$autoPreloadHooksRegistered = true
 
-      for (const hook of ['fetch', 'find'] as const) {
-        this.before(hook, (query: any) => {
-          this.handleAutoPreload(query)
-        })
-      }
-
-      this.before(
-        'paginate',
-        ([_, query]: [ModelQueryBuilderContract<any>, ModelQueryBuilderContract<any>]) => {
-          this.handleAutoPreload(query, false)
-        }
-      )
+      // Register hooks on the actual model subclass.
+      this.before('find', this.beforeFindHook.bind(this))
+      this.before('fetch', this.beforeFetchHook.bind(this))
+      this.before('paginate', this.beforePaginateHook.bind(this))
     }
 
-    public static without(relationships: any): any {
-      this.checkArrayOfRelationships('without', relationships)
-
-      this.$with = this.$with.filter((relationship) => {
-        if (typeof relationship === 'string') {
-          return !relationships.includes(relationship)
-        } else if (typeof relationship === 'function') {
-          return relationship
-        } else {
-          throw WrongArgumentTypeException.invoke(relationship)
-        }
-      })
-
-      return this
+    public static beforeFindHook(query: ModelQueryBuilderContract<any, any>) {
+      this.applyAutoPreload(query)
     }
 
-    public static withOnly(relationships: any): any {
-      this.checkArrayOfRelationships('withOnly', relationships)
-
-      this.$with = this.$with.filter((relationship) => {
-        if (typeof relationship === 'string') {
-          return relationships.includes(relationship)
-        } else if (typeof relationship === 'function') {
-          return relationship
-        } else {
-          throw WrongArgumentTypeException.invoke(relationship)
-        }
-      })
-
-      return this
+    public static beforeFetchHook(query: ModelQueryBuilderContract<any, any>) {
+      this.applyAutoPreload(query)
     }
 
-    public static withoutAny(): any {
-      this.$with = []
-
-      return this
+    public static beforePaginateHook(queries: any) {
+      const main = Array.isArray(queries) ? (queries[1] ?? queries[0]) : queries
+      this.applyAutoPreload(main)
     }
 
-    private static handleAutoPreload(
-      query: ModelQueryBuilderContract<any>,
-      restorePreloads = true
-    ) {
-      const preloads = this.$with
+    public static applyAutoPreload(query: ModelQueryBuilderContract<any, any>) {
+      // Check if auto-preload has been disabled for this specific query instance
+      if ((query as any).$disableAutoPreload) return
 
-      if (preloads.length > 0) {
-        for (const preload of preloads) {
-          if (typeof preload === 'string') {
-            if (preload.includes('.')) {
-              this.handleNestedRelationships(query, preload.split('.') as any)
-            } else {
-              query.preload(preload as any)
-            }
-          } else if (typeof preload === 'function') {
-            preload(query)
+      const relations = (this as any).$with as ReadonlyArray<PreloadEntry>
+      if (!Array.isArray(relations)) return
+
+      // Get list of relations to skip for this specific query
+      const skipList = (query as any).$skipPreloads || []
+      const onlyList = (query as any).$onlyPreloads || []
+
+      for (const relation of relations) {
+        if (typeof relation === 'string') {
+          if (onlyList.length > 0 && !onlyList.includes(relation)) continue
+          if (skipList.includes(relation)) continue
+
+          if (relation.includes('.')) {
+            this.handleNestedPreload(query, relation.split('.'))
+          } else {
+            query.preload(relation as any)
           }
+        } else if (typeof relation === 'function') {
+          relation(query)
         }
       }
+    }
 
-      if (restorePreloads) {
-        this.$with = [...this.$originalWith]
-      }
+    public static handleNestedPreload(query: any, parts: string[]) {
+      const current = parts.shift()
+      if (!current) return
+
+      query.preload(current as any, (builder: any) => {
+        if (parts.length > 0) {
+          this.handleNestedPreload(builder, [...parts])
+        }
+      })
     }
 
     /**
-     * Recursive function to handle nested relationships.
+     * Correct Implementation: Returns the Query Builder to avoid global state pollution
      */
-    private static handleNestedRelationships(
-      query: ModelQueryBuilderContract<any>,
-      relationships: any
-    ) {
-      if (relationships.length > 0) {
-        const nextRelation = relationships.shift()
-
-        if (nextRelation) {
-          query.preload(nextRelation, (qb: any) => {
-            if (relationships.length > 0) {
-              this.handleNestedRelationships(qb, relationships)
-            }
-          })
-        }
-      }
+    public static without(relations: string[]) {
+      const query = this.query()
+      ;(query as any).$skipPreloads = relations
+      return query
     }
 
-    private static checkArrayOfRelationships(method: string, relationships: Array<any>) {
-      if (relationships.length > 0) {
-        const isWrongType = relationships.every((relationship: any) => {
-          return !['function', 'string'].includes(typeof relationship)
-        })
+    public static withOnly(relations: string[]) {
+      const query = this.query()
+      ;(query as any).$onlyPreloads = relations
+      return query
+    }
 
-        if (isWrongType) {
-          throw WrongArgumentTypeException.invoke(method)
-        }
-      }
+    public static withoutAny() {
+      const query = this.query()
+      ;(query as any).$disableAutoPreload = true
+      return query
     }
   }
 

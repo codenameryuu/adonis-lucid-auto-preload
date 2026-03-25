@@ -1,6 +1,6 @@
 {
   "name": "@codenameryuu/adonis-lucid-auto-preload",
-  "version": "1.5.0",
+  "version": "2.2.0",
   "description": "Auto-preload multiple relationships when retrieving Lucid models on Adonis JS 7",
   "author": "codenameryuu",
   "license": "MIT",
@@ -13,16 +13,27 @@
     "node": ">=24.0.0"
   },
   "type": "module",
+  "types": "./build/index.d.ts",
   "files": [
     "build",
     "!build/bin",
     "!build/tests"
   ],
   "exports": {
-    ".": "./build/index.js",
-    "./adonis-typings": "./build/adonis-typings/*.js",
-    "./exceptions": "./build/exceptions/*.js",
-    "./providers": "./build/providers/auto_preload_provider.js"
+    ".": {
+      "types": "./build/index.d.ts",
+      "default": "./build/index.js"
+    },
+    "./mixins": {
+      "types": "./build/src/mixins/auto_preload.d.ts",
+      "default": "./build/src/mixins/auto_preload.js"
+    },
+    "./adonis-typings/*": "./build/adonis-typings/*.js",
+    "./exceptions/*": "./build/exceptions/*.js",
+    "./provider": {
+      "types": "./build/providers/auto_preload_provider.d.ts",
+      "default": "./build/providers/auto_preload_provider.js"
+    }
   },
   "scripts": {
     "clean": "del-cli build",
