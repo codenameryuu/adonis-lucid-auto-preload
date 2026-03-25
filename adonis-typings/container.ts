@@ -1,4 +1,4 @@
-import type { AutoPreloadMixin } from "./auto-preload";
+import type { AutoPreloadMixin } from "./auto-preload.js";
 
 declare module "@adonisjs/core/types" {
   export interface ContainerBindings {

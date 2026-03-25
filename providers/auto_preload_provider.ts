@@ -1,4 +1,6 @@
 import type { ApplicationService } from "@adonisjs/core/types";
+import { AutoPreload } from "../src/mixins/auto_preload.ts";
+export { configure } from "../configure.ts";
 
 export default class AutoPreloadProvider {
   public static needsApplication = true;
@@ -7,8 +9,6 @@ export default class AutoPreloadProvider {
 
   public register() {
     this.app.container.singleton("@codenameryuu/adonis-lucid-auto-preload", () => {
-      const { AutoPreload } = require("../src/Mixins/AutoPreload");
-
       return { AutoPreload };
     });
   }

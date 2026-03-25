@@ -7,4 +7,4 @@
 | index in place and export an empty array to satisfy the expected API.
 |
 */
-export default [];
+export default []

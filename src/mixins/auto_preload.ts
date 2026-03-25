@@ -1,8 +1,8 @@
 import type { NormalizeConstructor } from "@adonisjs/core/types/helpers";
 import type { LucidModel, ModelQueryBuilderContract } from "@adonisjs/lucid/types/model";
 
-import WrongRelationshipTypeException from "../Exceptions/WrongRelationshipTypeException";
-import WrongArgumentTypeException from "../Exceptions/WrongArgumentTypeException";
+import WrongRelationshipTypeException from "../exceptions/wrong_relationship_type_exception.ts";
+import WrongArgumentTypeException from "../exceptions/wrong_argument_type_exception.ts";
 
 type AutoPreloadMixin = <T extends NormalizeConstructor<LucidModel>>(
   superclass: T
