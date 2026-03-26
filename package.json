@@ -1,7 +1,7 @@
 {
   "name": "@codenameryuu/adonis-lucid-auto-preload",
-  "version": "2.2.0",
-  "description": "Auto-preload multiple relationships when retrieving Lucid models on Adonis JS 7",
+  "version": "2.3.0",
+  "description": "Auto-preload (eager loading) multiple relationships when retrieving Lucid models on Adonis JS",
   "author": "codenameryuu",
   "license": "MIT",
   "homepage": "https://github.com/codenameryuu/adonis-lucid-auto-preload#readme",
