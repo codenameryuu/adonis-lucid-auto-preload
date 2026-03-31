@@ -40,6 +40,8 @@ Relationships will be auto-preloaded for `find` , `all` and `paginate` queries.
 
 **Note:** Relationships must be `belongsTo` , if you are using other relationship types, it may cause infinite loop.
 
+**Note:** Make sure `AutoPreload` extended in the last position, especially when using `SoftDeletes` package.
+
 ### **Using relation name**
 
 ```typescript
@@ -50,10 +52,11 @@ import type { BelongsTo } from "@adonisjs/lucid/types/relations";
 import { compose } from "@adonisjs/core/helpers";
 
 import { AutoPreload } from "@codenameryuu/adonis-lucid-auto-preload";
+import { SoftDeletes } from "@codenameryuu/adonis-lucid-soft-deletes";
 
 import ProductCategory from '#models/product-category'
 
-class Product extends compose(BaseModel, AutoPreload) {
+class Product extends compose(BaseModel, SoftDeletes, AutoPreload) {
   public static $with = ['productCategory'] as const
 
   @column({ isPrimary: true })
@@ -99,10 +102,11 @@ import type { ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
 import { compose } from '@adonisjs/core/helpers'
 
 import { AutoPreload } from '@codenameryuu/adonis-lucid-auto-preload'
+import { SoftDeletes } from "@codenameryuu/adonis-lucid-soft-deletes";
 
 import ProductCategory from '#models/product-category'
 
-class Product extends compose(BaseModel, AutoPreload) {
+class Product extends compose(BaseModel, SoftDeletes, AutoPreload) {
   public static $with = [
     (query: ModelQueryBuilderContract<typeof this>) => {
       query.preload('productCategory')
@@ -151,10 +155,11 @@ import type { BelongsTo } from "@adonisjs/lucid/types/relations";
 import { compose } from "@adonisjs/core/helpers";
 
 import { AutoPreload } from "@codenameryuu/adonis-lucid-auto-preload";
+import { SoftDeletes } from "@codenameryuu/adonis-lucid-soft-deletes";
 
 import User from '#models/user'
 
-class ProductCategory extends compose(BaseModel, AutoPreload) {
+class ProductCategory extends compose(BaseModel, SoftDeletes, AutoPreload) {
   public static $with = ['user'] as const
 
   @column({ isPrimary: true })
@@ -183,10 +188,11 @@ import type { BelongsTo } from "@adonisjs/lucid/types/relations";
 import { compose } from '@adonisjs/core/helpers'
 
 import { AutoPreload } from '@codenameryuu/adonis-lucid-auto-preload'
+import { SoftDeletes } from "@codenameryuu/adonis-lucid-soft-deletes";
 
 import ProductCategory from '#models/product-category'
 
-class Product extends compose(BaseModel, AutoPreload) {
+class Product extends compose(BaseModel, SoftDeletes, AutoPreload) {
   public static $with = ['productCategory.user'] as const
 
   @column({ isPrimary: true })
