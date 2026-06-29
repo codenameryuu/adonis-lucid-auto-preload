@@ -77,7 +77,7 @@
   dependencies:
     "@poppinss/utils" "^7.0.0"
 
-"@adonisjs/core@^7.0.0":
+"@adonisjs/core@^7.3.4":
   version "7.3.4"
   resolved "https://registry.yarnpkg.com/@adonisjs/core/-/core-7.3.4.tgz#17f582fba591b6a15433cdfb7c2c2d886209a297"
   integrity sha512-m9X7UqF+cZbwVGUoFBadsRD4aF+zkQ056MCcitaekF4AUkWT9URUt8MoxtGNwD/vAgX96R95aDZuqCcyXsMgqA==
@@ -190,7 +190,7 @@
     abstract-logging "^2.0.1"
     pino "^10.3.1"
 
-"@adonisjs/lucid@^22.0.0":
+"@adonisjs/lucid@^22.4.2":
   version "22.4.2"
   resolved "https://registry.yarnpkg.com/@adonisjs/lucid/-/lucid-22.4.2.tgz#f45d5bf787d473a4e4dbdfa72025828633017317"
   integrity sha512-3ztENqBQIFSGAWREHKCGbL1g4ehtsxxsuFX72Uf5bq+oSc0D6UcumjzYpU8TPyBxhmgS6HuRSfz2rG42iuz7AA==
@@ -216,7 +216,7 @@
   resolved "https://registry.yarnpkg.com/@adonisjs/presets/-/presets-3.0.0.tgz#b0b18e12a9c300abd6e671616bbc65a6c73ce994"
   integrity sha512-+gVIvyEiM7jiN5Gb93200TAC8ed3vZIPfxFFo0pIVgX8k40BleuYhWxFhI6TPocVXXIIpw2JuMFV2Pqjk36W2A==
 
-"@adonisjs/prettier-config@^1.4.5":
+"@adonisjs/prettier-config@^1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@adonisjs/prettier-config/-/prettier-config-1.5.0.tgz#63ac8e3046df66ad3b83674142a00f30c72bef4b"
   integrity sha512-im5V503HAaWSqmDWXV3k40KMCXvgurGNExkjGjvEkl2N7Wp+RcBN3pC6PAWUA1j4iukp4azzuuuR2tPFgnIkbA==
@@ -575,7 +575,7 @@
     supports-color "^10.2.2"
     timekeeper "^2.3.1"
 
-"@japa/snapshot@^2.0.5":
+"@japa/snapshot@^2.0.10":
   version "2.0.10"
   resolved "https://registry.yarnpkg.com/@japa/snapshot/-/snapshot-2.0.10.tgz#489912034d88283737da0eba616cc619429516ec"
   integrity sha512-EYfUOPChKBDOP/O43Vf298cEDN1e3hhrQVm0qa5JmJufgFm5BFK2s9JR6zbAcibOaymqrVEH9/T5wwiGptPLpA==
@@ -2774,7 +2774,7 @@ prettier-edge@^1.0.0:
     angular-html-parser "^10.6.1"
     edge-lexer "^6.0.5"
 
-prettier@^3.8.1:
+prettier@^3.9.1:
   version "3.9.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.9.1.tgz#5868bcf16456bfe145ddbfa107c623b6f39e332c"
   integrity sha512-ppiDo2CSwexck1eyZUwJHg/N3nf1+6IRCv7W/VJ5vaLnVCmB7+3CdRfMwoCHBBX6xTrREDTksZ4OZl5SSf4zXA==
@@ -3596,7 +3596,7 @@ youch@^3.2.3:
     mustache "^4.2.0"
     stacktracey "^2.1.8"
 
-youch@^4.1.0, youch@^4.1.0-beta.13:
+youch@^4.1.0-beta.13, youch@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/youch/-/youch-4.1.1.tgz#ea930d7bcdc517b8826b3878f4519550f1effd5c"
   integrity sha512-mxW3qiSnl+GRxXsaUMzv2Mbada1Y8CDltET9UxejDQe6DBYlSekghl5U5K0ReAikcHDi0G1vKZEmmo/NWAGKLA==
