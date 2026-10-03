@@ -1,7 +1,37 @@
 import type { NormalizeConstructor } from "@adonisjs/core/types/helpers";
 import type { LucidModel, ModelQueryBuilderContract } from "@adonisjs/lucid/types/model";
+import { Exception } from "@adonisjs/core/exceptions";
 
 type PreloadEntry = string | ((query: ModelQueryBuilderContract<any, any>) => void);
+
+export type AutoPreloadQueryBuilder<Model extends LucidModel> = ModelQueryBuilderContract<
+  Model,
+  InstanceType<Model>
+> & {
+  /**
+   * Identity helper for Model-like chaining:
+   * `Model.without(['x']).query().paginate(1)`
+   */
+  query(): AutoPreloadQueryBuilder<Model>;
+  find(value: any): Promise<InstanceType<Model> | null>;
+  findOrFail(value: any): Promise<InstanceType<Model>>;
+  findBy(key: string | Record<string, unknown>, value?: any): Promise<InstanceType<Model> | null>;
+  findByOrFail(key: string | Record<string, unknown>, value?: any): Promise<InstanceType<Model>>;
+  findMany(value: any[]): Promise<InstanceType<Model>[]>;
+  all(): Promise<InstanceType<Model>[]>;
+};
+
+type ScopedFlags = {
+  $skipPreloads?: string[];
+  $onlyPreloads?: string[];
+  $disableAutoPreload?: boolean;
+};
+
+export type RelationInput = string | string[];
+
+function normalizeRelations(relations: RelationInput): string[] {
+  return Array.isArray(relations) ? relations : [relations];
+}
 
 export function AutoPreload<T extends NormalizeConstructor<LucidModel>>(superclass: T) {
   class AutoPreloadModel extends superclass {
@@ -34,7 +64,7 @@ export function AutoPreload<T extends NormalizeConstructor<LucidModel>>(supercla
     }
 
     public static beforePaginateHook(queries: any) {
-      const main = Array.isArray(queries) ? queries[1] ?? queries[0] : queries;
+      const main = Array.isArray(queries) ? (queries[1] ?? queries[0]) : queries;
       this.applyAutoPreload(main);
     }
 
@@ -77,26 +107,89 @@ export function AutoPreload<T extends NormalizeConstructor<LucidModel>>(supercla
     }
 
     /**
-     * Correct Implementation: Returns the Query Builder to avoid global state pollution
+     * Skip specific auto-preloaded relationships for this query.
+     * Accepts a string or an array of strings (Laravel-style).
      */
-    public static without(relations: string[]) {
-      const query = this.query();
-      (query as any).$skipPreloads = relations;
-      return query;
+    public static without(relations: RelationInput): AutoPreloadQueryBuilder<any> {
+      return createScopedQuery(this, { $skipPreloads: normalizeRelations(relations) });
     }
 
-    public static withOnly(relations: string[]) {
-      const query = this.query();
-      (query as any).$onlyPreloads = relations;
-      return query;
+    /**
+     * Only auto-preload the specified relationships for this query.
+     * Accepts a string or an array of strings (Laravel-style).
+     */
+    public static withOnly(relations: RelationInput): AutoPreloadQueryBuilder<any> {
+      return createScopedQuery(this, { $onlyPreloads: normalizeRelations(relations) });
     }
 
-    public static withoutAny() {
-      const query = this.query();
-      (query as any).$disableAutoPreload = true;
-      return query;
+    /**
+     * Disable all auto-preloads for this query.
+     */
+    public static withoutAny(): AutoPreloadQueryBuilder<any> {
+      return createScopedQuery(this, { $disableAutoPreload: true });
     }
   }
 
   return AutoPreloadModel;
+}
+
+/**
+ * Returns a query builder scoped with auto-preload flags, plus Laravel-like
+ * helpers (`find`, `findOrFail`, ...) so callers can write:
+ * `Model.without(['x']).find(1)`
+ */
+function createScopedQuery(Model: LucidModel, flags: ScopedFlags): AutoPreloadQueryBuilder<any> {
+  const query = Model.query() as AutoPreloadQueryBuilder<any>;
+
+  Object.assign(query, flags);
+
+  // Already a query builder — keep Model-like `.query()` chaining working.
+  query.query = () => query;
+
+  query.find = async (value: any) => {
+    if (value === undefined) {
+      throw new Exception('"find" expects a value. Received undefined');
+    }
+    return query.where(Model.primaryKey, value).first();
+  };
+
+  query.findOrFail = async (value: any) => {
+    if (value === undefined) {
+      throw new Exception('"findOrFail" expects a value. Received undefined');
+    }
+    return query.where(Model.primaryKey, value).firstOrFail();
+  };
+
+  query.findBy = async (key: string | Record<string, unknown>, value?: any) => {
+    if (typeof key === "object") {
+      return query.where(key).first();
+    }
+    if (value === undefined) {
+      throw new Exception('"findBy" expects a value. Received undefined');
+    }
+    return query.where(key, value).first();
+  };
+
+  query.findByOrFail = async (key: string | Record<string, unknown>, value?: any) => {
+    if (typeof key === "object") {
+      return query.where(key).firstOrFail();
+    }
+    if (value === undefined) {
+      throw new Exception('"findByOrFail" expects a value. Received undefined');
+    }
+    return query.where(key, value).firstOrFail();
+  };
+
+  query.findMany = async (value: any[]) => {
+    if (value === undefined) {
+      throw new Exception('"findMany" expects a value. Received undefined');
+    }
+    return query.whereIn(Model.primaryKey, value).orderBy(Model.primaryKey, "desc").exec();
+  };
+
+  query.all = async () => {
+    return query.orderBy(Model.primaryKey, "desc").exec();
+  };
+
+  return query;
 }

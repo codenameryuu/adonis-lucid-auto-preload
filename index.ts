@@ -9,3 +9,4 @@
 
 export { configure } from "./configure.js";
 export { AutoPreload } from "./src/mixins/auto_preload.js";
+export type { AutoPreloadQueryBuilder, RelationInput } from "./src/mixins/auto_preload.js";

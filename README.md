@@ -235,7 +235,7 @@ We will use the following model for our methods examples.
 
 ### **without**
 
-This method takes an array of relationship names as the only argument. All specified relationships will not be auto-preloaded. You cannot specify relationships registered using functions.
+This method takes a relationship name (string) or an array of names. All specified relationships will not be auto-preloaded. You cannot specify relationships registered using functions.
 
 ```typescript
 // App/Controllers/Http/ProductsController.ts
@@ -244,14 +244,15 @@ import Product from '#models/product'
 
 export default class ProductsController {
   public async show() {
-    return await Product.without(['productCategory']).find(1) // ⬅ Returns product without product category.
+    return await Product.without('productCategory').find(1) // ⬅ Returns product without product category.
+    // or: Product.without(['productCategory', 'anotherRelation']).find(1)
   }
 }
 ```
 
 ### **withOnly**
 
-This method takes an array of relationship names as the only argument. Only specified relationships will be auto-preloaded. You cannot specify relationships registered using functions.
+This method takes a relationship name (string) or an array of names. Only specified relationships will be auto-preloaded. You cannot specify relationships registered using functions.
 
 ```typescript
 // App/Controllers/Http/ProductsController.ts
@@ -260,7 +261,8 @@ import Product from '#models/product'
 
 export default class ProductsController {
   public async show() {
-    return await Product.withOnly(['productCategory']).find(1) // ⬅ Returns product with product category.
+    return await Product.withOnly('productCategory').find(1) // ⬅ Returns product with product category.
+    // or: Product.withOnly(['productCategory']).find(1)
   }
 }
 ```
@@ -283,7 +285,12 @@ export default class ProductsController {
 
 > **Note**
 >
-> You can chain other model methods with mixin methods. For example, `await Product.withoutAny().query().paginate(1)`
+> These methods already return a query builder (with `find` / `findOrFail` / `query` helpers). You can chain Lucid methods directly, or keep the Model-like `.query()` style:
+>
+> ```typescript
+> await Product.withoutAny().where('active', true).paginate(1)
+> await Product.withoutAny().query().paginate(1)
+> ```
 
 ## License
 
