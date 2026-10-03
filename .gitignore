@@ -15,4 +15,10 @@ test/__app
 dist
 shrinkwrap.yaml
 *.tgz
+
+# Depedencies lock
 package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lock
+bun.lockb
